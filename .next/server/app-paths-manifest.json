@@ -1,3 +1,6 @@
 {
-  "/page": "app/page.js"
+  "/page": "app/page.js",
+  "/api/shipping-rates/route": "app/api/shipping-rates/route.js",
+  "/api/cities/route": "app/api/cities/route.js",
+  "/workers-calculator/page": "app/workers-calculator/page.js"
 }
