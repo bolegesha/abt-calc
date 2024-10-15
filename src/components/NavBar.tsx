@@ -8,7 +8,10 @@ export default function NavBar() {
   const router = useRouter()
 
   const handleLogout = () => {
+<<<<<<< HEAD
     
+=======
+>>>>>>> ffa076d16240050c8ab480261e3c4773bbcf1d8b
     router.push('/auth')
   }
 
