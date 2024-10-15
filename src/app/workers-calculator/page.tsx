@@ -94,7 +94,7 @@ export default function WorkersTransportCalculator() {
       setCostByVolume(null);
     }
 
-    setDeliveryEstimate(`${rates.estimated_delivery_days_min} to ${rates.estimated_delivery_days_max} days`);
+    setDeliveryEstimate(`от ${rates.estimated_delivery_days_min} до ${rates.estimated_delivery_days_max} дней`);
     setError(null);
   };
 
@@ -219,15 +219,15 @@ export default function WorkersTransportCalculator() {
         {(costByWeight !== null || costByVolume !== null) && deliveryEstimate && (
           <div className="mt-12 p-8 bg-[#F5F5F7] rounded-2xl">
             <p className="text-2xl sm:text-3xl font-semibold text-[#1D1D1F] mb-3">
-              Cost by Weight: <span className="text-[#0071E3]">{costByWeight} тенге</span>
+              Цена по весу <span className="text-[#0071E3]">{costByWeight} тенге</span>
             </p>
             {costByVolume !== null && (
               <p className="text-2xl sm:text-3xl font-semibold text-[#1D1D1F] mb-3">
-                Cost by Volume: <span className="text-[#0071E3]">{costByVolume} тенге</span>
+                Цена по объему: <span className="text-[#0071E3]">{costByVolume} тенге</span>
               </p>
             )}
             <p className="text-sm text-[#86868B]">
-              Estimated Delivery Time: <span className="font-medium">{deliveryEstimate}</span>
+              Ожидаемое время доставки: <span className="font-medium">{deliveryEstimate}</span>
             </p>
           </div>
         )}

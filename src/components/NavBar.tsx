@@ -8,10 +8,6 @@ export default function NavBar() {
   const router = useRouter()
 
   const handleLogout = () => {
-<<<<<<< HEAD
-    
-=======
->>>>>>> ffa076d16240050c8ab480261e3c4773bbcf1d8b
     router.push('/auth')
   }
 
@@ -28,7 +24,7 @@ export default function NavBar() {
                 Главная страница
               </Link>
               <Link href="/calculator" className="text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md text-sm font-medium">
-                Расчет стоимость 
+                Калькулятор стоимости доставки
               </Link>
               <Link href="/about" className="text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md text-sm font-medium">
                 О нас

@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import NavBar from "@/components/NavBar";
+import Footer from "../components/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,11 +19,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} antialiased`}>
+      <body className={`${inter.className} antialiased flex flex-col min-h-screen`}>
         <NavBar />
-        <main className="pt-16"> {/* Add padding-top to account for the NavBar height */}
+        <main className="flex-grow pt-16"> {/* Added flex-grow */}
           {children}
         </main>
+        <Footer />
       </body>
     </html>
   );
