@@ -84,7 +84,7 @@ export default function TransportCalculator() {
     }
 
     setCost(Number(calculatedCost.toFixed(2)));
-    setDeliveryEstimate(`${rates.estimated_delivery_days_min} to ${rates.estimated_delivery_days_max} days`);
+    setDeliveryEstimate(`${rates.estimated_delivery_days_min} to ${rates.estimated_delivery_days_max} дней`);
     setError(null);
   };
 
@@ -208,10 +208,10 @@ export default function TransportCalculator() {
         {cost !== null && deliveryEstimate && (
           <div className="mt-12 p-8 bg-[#F5F5F7] rounded-2xl">
             <p className="text-2xl sm:text-3xl font-semibold text-[#1D1D1F] mb-3">
-              Estimated Cost: <span className="text-[#0071E3]">{cost} тенге</span>
+              Стоимость доставки: <span className="text-[#0071E3]">{cost} тенге</span>
             </p>
             <p className="text-sm text-[#86868B]">
-              Estimated Delivery Time: <span className="font-medium">{deliveryEstimate}</span>
+              Ожидаемое время доставки: <span className="font-medium">{deliveryEstimate}</span>
             </p>
           </div>
         )}
