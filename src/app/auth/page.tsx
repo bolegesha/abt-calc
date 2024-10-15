@@ -62,7 +62,8 @@ export default function AuthPage() {
       if (isLogin) {
         setToken(data.token)
         setUser(data.user)
-        router.push('/') // Redirect to home page after successful login
+        console.log('Login successful, redirecting...')
+        router.push('/')
       } else {
         console.log('Signed up successfully')
         setIsLogin(true) // Switch to login mode after successful signup
@@ -78,6 +79,11 @@ export default function AuthPage() {
       setIsLoading(false)
     }
   }
+
+  if (isAuthenticated()) {
+    return null // or a loading indicator
+  }
+
 
   return (
       <div className="flex flex-col md:flex-row h-screen bg-[#F5F5F7]">

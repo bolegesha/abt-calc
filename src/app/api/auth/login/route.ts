@@ -1,35 +1,36 @@
-import { sql } from '@vercel/postgres';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import { NextResponse } from 'next/server';
+// src/app/api/auth/login/route.ts
+import { NextResponse } from 'next/server'
+import { sql } from '@vercel/postgres'
+import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
 
-const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET = process.env.JWT_SECRET
+
+if (!JWT_SECRET) {
+  throw new Error('JWT_SECRET is not defined in environment variables')
+}
 
 export async function POST(request: Request) {
   try {
-    const { email, password } = await request.json();
+    const { email, password } = await request.json()
 
     if (!email || !password) {
-      return NextResponse.json({ message: 'Missing email or password' }, { status: 400 });
+      return NextResponse.json({ message: 'Missing email or password' }, { status: 400 })
     }
 
     const result = await sql`
       SELECT * FROM users WHERE email = ${email}
-    `;
+    `
 
     if (result.rows.length === 0) {
-      return NextResponse.json({ message: 'Invalid credentials' }, { status: 401 });
+      return NextResponse.json({ message: 'Invalid credentials' }, { status: 401 })
     }
 
-    const user = result.rows[0];
-    const passwordMatch = await bcrypt.compare(password, user.password);
+    const user = result.rows[0]
+    const passwordMatch = await bcrypt.compare(password, user.password)
 
     if (!passwordMatch) {
-      return NextResponse.json({ message: 'Invalid credentials' }, { status: 401 });
-    }
-
-    if (!JWT_SECRET) {
-      throw new Error('JWT_SECRET is not defined');
+      return NextResponse.json({ message: 'Invalid credentials' }, { status: 401 })
     }
 
     // Create JWT token
@@ -37,11 +38,31 @@ export async function POST(request: Request) {
         { userId: user.id, email: user.email },
         JWT_SECRET,
         { expiresIn: '24h' }
-    );
+    )
 
-    return NextResponse.json({ token, user: { id: user.id, email: user.email, fullName: user.full_name } }, { status: 200 });
+    // Create a new response
+    const response = NextResponse.json({
+      message: 'Login successful',
+      user: {
+        id: user.id,
+        email: user.email,
+        fullName: user.full_name
+      }
+    }, { status: 200 })
+
+    // Set the token as an HTTP-only cookie
+    response.cookies.set('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV !== 'development',
+      sameSite: 'strict',
+      maxAge: 60 * 60 * 24, // 1 day
+      path: '/',
+    })
+
+    return response
+
   } catch (error) {
-    console.error('Login error:', error);
-    return NextResponse.json({ message: 'Error logging in', error: (error as Error).message }, { status: 500 });
+    console.error('Login error:', error)
+    return NextResponse.json({ message: 'Error logging in', error: (error as Error).message }, { status: 500 })
   }
 }

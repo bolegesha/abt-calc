@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 export function middleware(request: NextRequest) {
-    const token = request.headers.get('Authorization')?.split(' ')[1]
+    const token = request.cookies.get('token')?.value
     const isAuthPage = request.nextUrl.pathname === '/auth'
 
     if (!token && !isAuthPage) {
@@ -17,5 +17,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-    matcher: '/((?!api|_next/static|_next/image|favicon.ico).*)',
+    matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
 }

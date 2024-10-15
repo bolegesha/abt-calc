@@ -1,47 +1,33 @@
+// src/utils/auth.ts
+import Cookies from 'js-cookie'
+
 export const isAuthenticated = () => {
-  if (typeof window !== 'undefined') {
-    return !!localStorage.getItem('token')
-  }
-  return false
+  return !!Cookies.get('token')
 }
 
 export const getToken = () => {
-  if (typeof window !== 'undefined') {
-    return localStorage.getItem('token')
-  }
-  return null
+  return Cookies.get('token')
 }
 
 export const setToken = (token: string) => {
-  if (typeof window !== 'undefined') {
-    localStorage.setItem('token', token)
-  }
+  Cookies.set('token', token, { expires: 7 }) // expires in 7 days
 }
 
 export const removeToken = () => {
-  if (typeof window !== 'undefined') {
-    localStorage.removeItem('token')
-  }
+  Cookies.remove('token')
 }
 
 export const setUser = (user: any) => {
-  if (typeof window !== 'undefined') {
-    localStorage.setItem('user', JSON.stringify(user))
-  }
+  Cookies.set('user', JSON.stringify(user), { expires: 7 })
 }
 
 export const getUser = () => {
-  if (typeof window !== 'undefined') {
-    const user = localStorage.getItem('user')
-    return user ? JSON.parse(user) : null
-  }
-  return null
+  const user = Cookies.get('user')
+  return user ? JSON.parse(user) : null
 }
 
 export const removeUser = () => {
-  if (typeof window !== 'undefined') {
-    localStorage.removeItem('user')
-  }
+  Cookies.remove('user')
 }
 
 export const logout = () => {
