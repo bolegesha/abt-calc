@@ -8,7 +8,6 @@ export default function NavBar() {
   const router = useRouter()
 
   const handleLogout = () => {
-    deleteCookie('isLoggedIn')
     router.push('/auth')
   }
 
