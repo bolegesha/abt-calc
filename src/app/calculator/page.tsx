@@ -40,7 +40,6 @@ export default function TransportCalculator() {
       fetch(`/api/shipping-rates?startCity=${startCity}&endCity=${endCity}`)
         .then(response => response.json())
         .then(data => {
-          console.log('Fetched shipping rates:', data);
           setRates(data);
         })
         .catch(error => {
