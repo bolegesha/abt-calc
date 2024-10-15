@@ -122,7 +122,7 @@ export default function AuthPage() {
                   name="name"
                   type="text"
                   autoComplete="name"
-                  required
+                  // required
                   className="mt-1 w-full px-4 py-4 bg-white border border-[#D1D1D6] rounded-xl focus:ring-2 focus:ring-[#0071E3] focus:border-transparent transition-colors text-lg"
                   placeholder="Enter your full name"
                 />
