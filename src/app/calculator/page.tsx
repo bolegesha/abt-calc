@@ -84,7 +84,7 @@ export default function TransportCalculator() {
     }
 
     setCost(Number(calculatedCost.toFixed(2)));
-    setDeliveryEstimate(`${rates.estimated_delivery_days_min} to ${rates.estimated_delivery_days_max} дней`);
+    setDeliveryEstimate(`от ${rates.estimated_delivery_days_min} до ${rates.estimated_delivery_days_max} дней`);
     setError(null);
   };
 
