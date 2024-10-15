@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
+import { isAuthenticated, setToken, setUser } from '@/utils/auth'
 
 const InteractiveMap = dynamic(() => import('../../components/InteractiveMap'), {
   ssr: false,
@@ -17,21 +18,13 @@ export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
-    const token = localStorage.getItem('token')
-    if (token) {
-      setIsAuthenticated(true)
+    if (isAuthenticated()) {
+      router.push('/')
     }
-  }, [])
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      router.push('/profile')
-    }
-  }, [isAuthenticated, router])
+  }, [router])
 
   const toggleAuthMode = () => {
     setIsLogin(!isLogin)
@@ -67,9 +60,9 @@ export default function AuthPage() {
       }
 
       if (isLogin) {
-        localStorage.setItem('token', data.token)
-        localStorage.setItem('user', JSON.stringify(data.user))
-        setIsAuthenticated(true)
+        setToken(data.token)
+        setUser(data.user)
+        router.push('/') // Redirect to home page after successful login
       } else {
         console.log('Signed up successfully')
         setIsLogin(true) // Switch to login mode after successful signup
@@ -84,10 +77,6 @@ export default function AuthPage() {
     } finally {
       setIsLoading(false)
     }
-  }
-
-  if (isAuthenticated) {
-    return null // or a loading indicator
   }
 
   return (
