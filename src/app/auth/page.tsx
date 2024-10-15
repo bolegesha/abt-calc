@@ -52,6 +52,8 @@ export default function AuthPage() {
         }
 
         console.log('Logged in successfully')
+        // Set cookie for 24 hours
+        document.cookie = `isLoggedIn=true; max-age=${60 * 60 * 24}; path=/;`
       } else {
         // Sign up logic
         const hashedPassword = await bcrypt.hash(password, 10)

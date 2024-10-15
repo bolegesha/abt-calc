@@ -2,14 +2,13 @@
 
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { deleteCookie } from 'cookies-next'
 import Image from 'next/image'
 
 export default function NavBar() {
   const router = useRouter()
 
   const handleLogout = () => {
-    deleteCookie('isLoggedIn')
+    
     router.push('/auth')
   }
 
@@ -23,25 +22,25 @@ export default function NavBar() {
             </Link>
             <div className="ml-10 flex items-baseline space-x-4">
               <Link href="/" className="text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md text-sm font-medium">
-                Main Page
+                Главная страница
               </Link>
               <Link href="/calculator" className="text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md text-sm font-medium">
-                Calculator
+                Расчет стоимость 
               </Link>
               <Link href="/about" className="text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md text-sm font-medium">
-                About Us
+                О нас
               </Link>
             </div>
           </div>
           <div className="flex items-center">
             <Link href="/profile" className="bg-[#0071E3] text-white px-4 py-2 rounded-full hover:bg-[#0077ED] transition-colors text-sm font-medium">
-              Profile
+              Профиль
             </Link>
             <button
               onClick={handleLogout}
               className="ml-4 text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md text-sm font-medium"
             >
-              Logout
+              Выйти 
             </button>
           </div>
         </div>
