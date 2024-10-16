@@ -1,33 +1,37 @@
 // src/utils/auth.ts
-import Cookies from 'js-cookie'
+
+const isBrowser = typeof window !== 'undefined'
 
 export const isAuthenticated = () => {
-  return !!Cookies.get('token')
+  if (!isBrowser) return false
+  return !!localStorage.getItem('token')
 }
 
 export const getToken = () => {
-  return Cookies.get('token')
+  if (!isBrowser) return null
+  return localStorage.getItem('token')
 }
 
 export const setToken = (token: string) => {
-  Cookies.set('token', token, { expires: 7 }) // expires in 7 days
+  if (isBrowser) localStorage.setItem('token', token)
 }
 
 export const removeToken = () => {
-  Cookies.remove('token')
+  if (isBrowser) localStorage.removeItem('token')
 }
 
 export const setUser = (user: any) => {
-  Cookies.set('user', JSON.stringify(user), { expires: 7 })
+  if (isBrowser) localStorage.setItem('user', JSON.stringify(user))
 }
 
 export const getUser = () => {
-  const user = Cookies.get('user')
+  if (!isBrowser) return null
+  const user = localStorage.getItem('user')
   return user ? JSON.parse(user) : null
 }
 
 export const removeUser = () => {
-  Cookies.remove('user')
+  if (isBrowser) localStorage.removeItem('user')
 }
 
 export const logout = () => {

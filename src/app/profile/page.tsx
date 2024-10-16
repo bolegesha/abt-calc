@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from "@/components/ui/button"
+import { getUser, getToken, logout } from '@/utils/auth'
 
 export default function ProfilePage() {
     const [user, setUser] = useState<{ email: string; fullName: string } | null>(null)
@@ -10,22 +11,19 @@ export default function ProfilePage() {
     const router = useRouter()
 
     useEffect(() => {
-        const userStr = localStorage.getItem('user')
-        const storedToken = localStorage.getItem('token')
+        const userData = getUser()
+        const storedToken = getToken()
 
-        if (userStr && storedToken) {
-            const userData = JSON.parse(userStr)
+        if (userData && storedToken) {
             setUser(userData)
             setToken(storedToken)
         } else {
-            // If no user data or token is found, redirect to login
             router.push('/auth')
         }
     }, [router])
 
     const handleLogout = () => {
-        localStorage.removeItem('token')
-        localStorage.removeItem('user')
+        logout()
         router.push('/auth')
     }
 
