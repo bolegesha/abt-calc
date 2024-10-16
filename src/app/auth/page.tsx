@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
-import { isAuthenticated, setToken, setUser } from '@/utils/auth'
+import { useUserData } from '@/hooks/UserData'
 
 const InteractiveMap = dynamic(() => import('../../components/InteractiveMap'), {
   ssr: false,
@@ -16,74 +16,38 @@ const InteractiveMap = dynamic(() => import('../../components/InteractiveMap'), 
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
+  const { user, error, loading, login, signup } = useUserData()
   const router = useRouter()
 
   useEffect(() => {
-    if (isAuthenticated()) {
+    if (user) {
       router.push('/')
     }
-  }, [router])
+  }, [user, router])
 
   const toggleAuthMode = () => {
     setIsLogin(!isLogin)
-    setError(null)
   }
 
   const handleAuth = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    setIsLoading(true)
-    setError(null)
 
     const formData = new FormData(event.currentTarget)
     const email = formData.get('email') as string
     const password = formData.get('password') as string
     const name = formData.get('name') as string
 
-    try {
-      const endpoint = isLogin ? '/api/auth/login' : '/api/auth/signup'
-      const body = isLogin ? { email, password } : { email, password, fullName: name }
-
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(body),
-      })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Authentication failed')
-      }
-
-      if (isLogin) {
-        setToken(data.token)
-        setUser(data.user)
-        console.log('Login successful, redirecting...')
-        router.push('/')
-      } else {
-        console.log('Signed up successfully')
-        setIsLogin(true) // Switch to login mode after successful signup
-      }
-    } catch (error) {
-      console.error('Auth error:', error)
-      if (error instanceof Error) {
-        setError(error.message)
-      } else {
-        setError('An unexpected error occurred')
-      }
-    } finally {
-      setIsLoading(false)
+    if (isLogin) {
+      await login(email, password)
+    } else {
+      await signup(email, password, name)
+      setIsLogin(true) // Switch to login mode after successful signup
     }
   }
 
-  if (isAuthenticated()) {
+  if (user) {
     return null // or a loading indicator
   }
-
 
   return (
       <div className="flex flex-col md:flex-row h-screen bg-[#F5F5F7]">
@@ -98,9 +62,7 @@ export default function AuthPage() {
                 {isLogin ? 'Welcome Back' : 'Create Account'}
               </h2>
               <p className="text-center text-[#86868B] text-lg">
-                {isLogin
-                    ? 'Sign in to your account'
-                    : 'Sign up for a new account'}
+                {isLogin ? 'Sign in to your account' : 'Sign up for a new account'}
               </p>
             </div>
 
@@ -109,7 +71,6 @@ export default function AuthPage() {
                   <span className="font-medium">{error}</span>
                 </div>
             )}
-
             <form onSubmit={handleAuth} className="space-y-8">
               {!isLogin && (
                   <div>
@@ -159,9 +120,9 @@ export default function AuthPage() {
               <Button
                   type="submit"
                   className="w-full bg-[#0071E3] text-white py-4 px-6 rounded-full text-lg font-medium hover:bg-[#0077ED] transition-colors focus:outline-none focus:ring-2 focus:ring-[#0071E3] focus:ring-opacity-50"
-                  disabled={isLoading}
+                  disabled={loading}
               >
-                {isLoading ? 'Processing...' : (isLogin ? 'Sign In' : 'Sign Up')}
+                {loading ? 'Processing...' : (isLogin ? 'Sign In' : 'Sign Up')}
               </Button>
             </form>
 

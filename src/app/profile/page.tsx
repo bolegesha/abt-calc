@@ -1,34 +1,26 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from "@/components/ui/button"
-import { getUser, getToken, logout } from '@/utils/auth'
+import { useUserData } from '@/hooks/UserData'
 
 export default function ProfilePage() {
-    const [user, setUser] = useState<{ email: string; fullName: string } | null>(null)
-    const [token, setToken] = useState<string | null>(null)
+    const { user, token, loading, logout } = useUserData()
     const router = useRouter()
 
     useEffect(() => {
-        const userData = getUser()
-        const storedToken = getToken()
-
-        if (userData && storedToken) {
-            setUser(userData)
-            setToken(storedToken)
-        } else {
+        if (!loading && !user) {
             router.push('/auth')
         }
-    }, [router])
+    }, [user, loading, router])
 
-    const handleLogout = () => {
-        logout()
-        router.push('/auth')
+    if (loading) {
+        return <div>Loading...</div>
     }
 
     if (!user || !token) {
-        return <div>Loading...</div>
+        return null // This case is handled by the useEffect hook
     }
 
     return (
@@ -52,7 +44,7 @@ export default function ProfilePage() {
                     </div>
                 </div>
                 <Button
-                    onClick={handleLogout}
+                    onClick={logout}
                     className="w-full mt-8 bg-[#0071E3] text-white py-2 px-4 rounded-full text-lg font-medium hover:bg-[#0077ED] transition-colors focus:outline-none focus:ring-2 focus:ring-[#0071E3] focus:ring-opacity-50"
                 >
                     Logout
