@@ -37,7 +37,7 @@ export async function POST(request: Request) {
     const token = jwt.sign(
         { userId: user.id, email: user.email },
         JWT_SECRET,
-        { expiresIn: '24h' }
+        { expiresIn: '9h' }
     )
 
     // Create a new response
