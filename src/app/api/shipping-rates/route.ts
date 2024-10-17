@@ -1,31 +1,48 @@
+// src/app/api/shipping-rates/route.ts
 import { NextResponse } from 'next/server';
-import { getShippingRates, getBaseCosts } from '../../../lib/db';
+import { db } from '@/db';
+import { shippingRoutes, baseCosts } from '@/db/schema';
+import { and, eq } from 'drizzle-orm';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const startCity = searchParams.get('startCity');
   const endCity = searchParams.get('endCity');
 
-  console.log('Received request for shipping rates:', { startCity, endCity });
-
   if (!startCity || !endCity) {
     return NextResponse.json({ error: 'Start city and end city are required' }, { status: 400 });
   }
 
   try {
-    const shippingRates = await getShippingRates(startCity, endCity);
-    const baseCosts = await getBaseCosts();
+    const [route] = await db.select()
+        .from(shippingRoutes)
+        .where(and(
+            eq(shippingRoutes.startCity, startCity),
+            eq(shippingRoutes.endCity, endCity)
+        ));
+
+    if (!route) {
+      return NextResponse.json({ error: 'Shipping route not found' }, { status: 404 });
+    }
+
+    const [costs] = await db.select().from(baseCosts);
+
+    if (!costs) {
+      return NextResponse.json({ error: 'Base costs not found' }, { status: 404 });
+    }
 
     const rates = {
-      ...shippingRates,
-      base_cost_composition: baseCosts.composition,
-      base_cost_door: baseCosts.door,
+      price_per_kg_composition: Number(route.pricePerKgComposition),
+      price_per_kg_door: Number(route.pricePerKgDoor),
+      estimated_delivery_days_min: route.estimatedDeliveryDaysMin,
+      estimated_delivery_days_max: route.estimatedDeliveryDaysMax,
+      base_cost_composition: Number(costs.composition),
+      base_cost_door: Number(costs.door),
     };
 
-    console.log('Shipping rates and base costs fetched:', rates);
     return NextResponse.json(rates);
   } catch (error) {
-    console.error('Error fetching shipping rates and base costs:', error);
-    return NextResponse.json({ error: 'Failed to fetch shipping rates and base costs', details: error.message }, { status: 500 });
+    console.error('Failed to fetch shipping rates:', error);
+    return NextResponse.json({ error: 'Failed to load shipping rates' }, { status: 500 });
   }
 }

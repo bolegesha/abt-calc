@@ -114,9 +114,9 @@ export default function UnifiedTransportCalculator({ calculatorType }: Transport
                                 className="w-full px-4 py-3 bg-[#F5F5F7] border-none rounded-xl focus:ring-2 focus:ring-[#0071E3] transition-colors"
                             >
                                 <option value="">Выберите город</option>
-                                {cities.map((city) => (
+                                {Array.isArray(cities) ? cities.map((city) => (
                                     <option key={city} value={city}>{city}</option>
-                                ))}
+                                )) : null}
                             </select>
                         </div>
                         <div>
@@ -127,9 +127,9 @@ export default function UnifiedTransportCalculator({ calculatorType }: Transport
                                 className="w-full px-4 py-3 bg-[#F5F5F7] border-none rounded-xl focus:ring-2 focus:ring-[#0071E3] transition-colors"
                             >
                                 <option value="">Выберите город</option>
-                                {cities.map((city) => (
+                                {Array.isArray(cities) ? cities.map((city) => (
                                     <option key={city} value={city}>{city}</option>
-                                ))}
+                                )) : null}
                             </select>
                         </div>
                     </div>

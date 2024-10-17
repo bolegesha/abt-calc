@@ -31,9 +31,12 @@ export function useShippingData(startCity: string, endCity: string): [ShippingDa
 
     useEffect(() => {
         if (startCity && endCity) {
-            fetch(`/api/shipping-rates?startCity=${startCity}&endCity=${endCity}`)
+            fetch(`/api/shipping-rates?startCity=${encodeURIComponent(startCity)}&endCity=${encodeURIComponent(endCity)}`)
                 .then(response => response.json())
                 .then(data => {
+                    if (data.error) {
+                        throw new Error(data.error);
+                    }
                     setRates(data);
                 })
                 .catch(error => {
