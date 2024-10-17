@@ -1,9 +1,9 @@
 {
-  "/_not-found/page": "app/_not-found/page.js",
-  "/workers-calculator/page": "app/workers-calculator/page.js",
-  "/api/cities/route": "app/api/cities/route.js",
-  "/api/shipping-rates/route": "app/api/shipping-rates/route.js",
+  "/auth/page": "app/auth/page.js",
   "/page": "app/page.js",
+  "/api/cities/route": "app/api/cities/route.js",
+  "/about/page": "app/about/page.js",
+  "/api/auth/login/route": "app/api/auth/login/route.js",
   "/calculator/page": "app/calculator/page.js",
-  "/auth/page": "app/auth/page.js"
+  "/profile/page": "app/profile/page.js"
 }

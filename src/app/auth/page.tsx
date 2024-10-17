@@ -21,7 +21,7 @@ export default function AuthPage() {
 
   useEffect(() => {
     if (user) {
-      router.push('/')
+      router.replace('/')
     }
   }, [user, router])
 
@@ -45,8 +45,12 @@ export default function AuthPage() {
     }
   }
 
+  if (loading) {
+    return <div>Loading...</div>
+  }
+
   if (user) {
-    return null // or a loading indicator
+    return null
   }
 
   return (

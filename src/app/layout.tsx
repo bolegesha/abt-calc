@@ -19,9 +19,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} antialiased flex flex-col min-h-screen`}>
+      <body className={`${inter.className} antialiasing flex flex-col min-h-screen`}>
         <NavBar />
-        <main className="flex-grow pt-16"> {/* Added flex-grow */}
+        <main className="flex-grow pt-16">
           {children}
         </main>
         <Footer />

@@ -47,7 +47,8 @@ export function useUserData(): UseUserDataReturn {
             setToken(data.token);
             localStorage.setItem('user', JSON.stringify(data.user));
             localStorage.setItem('token', data.token);
-            router.push('/');
+            setError(null);
+            // Remove the router.push('/') from here
         } catch (err) {
             setError(err instanceof Error ? err.message : 'An unexpected error occurred');
         } finally {
