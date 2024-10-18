@@ -4,18 +4,17 @@ import { cookies } from 'next/headers'
 export async function GET() {
   const cookieStore = cookies()
   const token = cookieStore.get('token')
+  const userDataCookie = cookieStore.get('userData')
 
-  if (!token) {
+  if (!token || !userDataCookie) {
     return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
   }
 
-  // Here you would typically verify the token with your authentication service
-  // For now, we'll just return a mock user
-  const user = {
-    id: '1',
-    fullName: 'John Doe',
-    email: 'john@example.com'
+  try {
+    const user = JSON.parse(userDataCookie.value)
+    return NextResponse.json({ user, token: token.value })
+  } catch (error) {
+    console.error('Error parsing user data:', error)
+    return NextResponse.json({ error: 'Invalid user data' }, { status: 500 })
   }
-
-  return NextResponse.json({ user, token: token.value })
 }

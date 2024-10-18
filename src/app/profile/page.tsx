@@ -36,12 +36,6 @@ export default function ProfilePage() {
                         <label className="block text-sm font-medium text-[#86868B]">Email</label>
                         <p className="mt-1 text-lg text-[#1D1D1F]">{user.email}</p>
                     </div>
-                    <div>
-                        <label className="block text-sm font-medium text-[#86868B]">Token</label>
-                        <p className="mt-1 text-sm text-[#1D1D1F] break-all bg-gray-100 p-2 rounded">
-                            {token}
-                        </p>
-                    </div>
                 </div>
                 <Button
                     onClick={logout}

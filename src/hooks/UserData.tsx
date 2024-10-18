@@ -121,8 +121,9 @@ export function useUserData(): UseUserDataReturn {
             await fetchData('/api/logout', 'POST');
             setUser(null);
             setToken(null);
-            // Clear the token cookie
+            // Clear the token and userData cookies
             document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+            document.cookie = 'userData=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
             router.push('/auth');
         } catch (error) {
             setError('An error occurred during logout');
