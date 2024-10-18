@@ -1,87 +1,135 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 
 interface User {
+    id: string;
+    fullName: string;  // Changed from 'name' to 'fullName'
     email: string;
-    fullName: string;
 }
 
-interface UseUserDataReturn {
+export interface UseUserDataReturn {
     user: User | null;
     token: string | null;
     error: string | null;
     loading: boolean;
     login: (email: string, password: string) => Promise<void>;
-    signup: (email: string, password: string, fullName: string) => Promise<void>;
-    logout: () => void;
+    signup: (email: string, password: string, name: string) => Promise<void>;
+    logout: () => Promise<void>;
+    checkSession: () => Promise<boolean>;
+}
+
+// Implement fetchData function
+async function fetchData(url: string, method: string, body?: object) {
+    const options: RequestInit = {
+        method,
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include', // This is important for handling cookies
+    };
+
+    if (body) {
+        options.body = JSON.stringify(body);
+    }
+
+    const response = await fetch(url, options);
+    return response;
 }
 
 export function useUserData(): UseUserDataReturn {
     const [user, setUser] = useState<User | null>(null);
     const [token, setToken] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
+    const [loading, setLoading] = useState(true);
     const router = useRouter();
 
-    useEffect(() => {
-        const storedUser = localStorage.getItem('user');
-        const storedToken = localStorage.getItem('token');
-        if (storedUser && storedToken) {
-            setUser(JSON.parse(storedUser));
-            setToken(storedToken);
+    const checkSession = useCallback(async (): Promise<boolean> => {
+        try {
+            const response = await fetchData('/api/check-session', 'GET');
+            if (response.ok) {
+                const data = await response.json();
+                setUser(data.user);
+                setToken(data.token);
+                setLoading(false);
+                return true;
+            } else {
+                setUser(null);
+                setToken(null);
+                setLoading(false);
+                return false;
+            }
+        } catch (error) {
+            console.error('Error checking session:', error);
+            setUser(null);
+            setToken(null);
+            setLoading(false);
+            return false;
         }
-        setLoading(false);
     }, []);
 
+    useEffect(() => {
+        checkSession();
+    }, [checkSession]);
+
     const login = async (email: string, password: string) => {
+        setLoading(true);
+        setError(null);
         try {
-            setLoading(true);
-            const response = await fetch('/api/auth/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password }),
-            });
-            const data = await response.json();
-            if (!response.ok) throw new Error(data.message || 'Login failed');
-            setUser(data.user);
-            setToken(data.token);
-            localStorage.setItem('user', JSON.stringify(data.user));
-            localStorage.setItem('token', data.token);
-            setError(null);
-            // Remove the router.push('/') from here
-        } catch (err) {
-            setError(err instanceof Error ? err.message : 'An unexpected error occurred');
+            const response = await fetchData('/api/login', 'POST', { email, password });
+            if (response.ok) {
+                const data = await response.json();
+                setUser(data.user);
+                setToken(data.token);
+                // Set a cookie with the token
+                document.cookie = `token=${data.token}; path=/; max-age=86400; samesite=strict; secure`;
+                router.push('/');
+            } else {
+                const errorData = await response.json();
+                setError(errorData.message || 'Login failed');
+            }
+        } catch (error) {
+            setError('An error occurred during login');
         } finally {
             setLoading(false);
         }
     };
 
-    const signup = async (email: string, password: string, fullName: string) => {
+    const signup = async (email: string, password: string, name: string) => {
+        setLoading(true);
+        setError(null);
         try {
-            setLoading(true);
-            const response = await fetch('/api/auth/signup', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password, fullName }),
-            });
-            const data = await response.json();
-            if (!response.ok) throw new Error(data.message || 'Signup failed');
-            // After successful signup, we don't log in automatically
-            setError(null);
-        } catch (err) {
-            setError(err instanceof Error ? err.message : 'An unexpected error occurred');
+            const response = await fetchData('/api/signup', 'POST', { email, password, name });
+            if (response.ok) {
+                const data = await response.json();
+                setUser(data.user);
+                setToken(data.token);
+                router.push('/');
+            } else {
+                const errorData = await response.json();
+                setError(errorData.message || 'Signup failed');
+            }
+        } catch (error) {
+            setError('An error occurred during signup');
         } finally {
             setLoading(false);
         }
     };
 
-    const logout = () => {
-        setUser(null);
-        setToken(null);
-        localStorage.removeItem('user');
-        localStorage.removeItem('token');
-        router.push('/auth');
+    const logout = async () => {
+        setLoading(true);
+        try {
+            await fetchData('/api/logout', 'POST');
+            setUser(null);
+            setToken(null);
+            // Clear the token cookie
+            document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+            router.push('/auth');
+        } catch (error) {
+            setError('An error occurred during logout');
+        } finally {
+            setLoading(false);
+        }
     };
 
-    return { user, token, error, loading, login, signup, logout };
+    return { user, token, error, loading, login, signup, logout, checkSession };
 }
