@@ -1,4 +1,3 @@
-// src/utils/auth.ts
 
 const isBrowser = typeof window !== 'undefined'
 

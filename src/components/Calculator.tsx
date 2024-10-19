@@ -24,8 +24,7 @@ export default function UnifiedTransportCalculator({ calculatorType }: Transport
     const [startCity, setStartCity] = useState("");
     const [endCity, setEndCity] = useState("");
     const [shippingType, setShippingType] = useState<"composition" | "door">("composition");
-    const [costByWeight, setCostByWeight] = useState<number | null>(null);
-    const [costByVolume, setCostByVolume] = useState<number | null>(null);
+    const [finalCost, setFinalCost] = useState<number | null>(null);
     const [deliveryEstimate, setDeliveryEstimate] = useState<string | null>(null);
     const [calculationError, setCalculationError] = useState<string | null>(null);
 
@@ -33,8 +32,7 @@ export default function UnifiedTransportCalculator({ calculatorType }: Transport
 
     const calculateCost = () => {
         setCalculationError(null);
-        setCostByWeight(null);
-        setCostByVolume(null);
+        setFinalCost(null);
 
         if (!rates || !weight) {
             setCalculationError("Please fill in all required fields and ensure shipping rates are loaded.");
@@ -55,25 +53,23 @@ export default function UnifiedTransportCalculator({ calculatorType }: Transport
             : rates.base_cost_door;
 
         // Calculate cost by weight
-        let calculatedCostByWeight: number;
+        let costByWeight: number;
         if (calculatedWeight <= 20) {
-            calculatedCostByWeight = baseCost;
+            costByWeight = baseCost;
         } else {
-            calculatedCostByWeight = baseCost + (calculatedWeight - 20) * pricePerKg;
+            costByWeight = baseCost + (calculatedWeight - 20) * pricePerKg;
         }
-        setCostByWeight(Number(calculatedCostByWeight.toFixed(2)));
 
         // Calculate cost by volume if dimensions are provided
         if (length && width && height) {
-            const volume = (parseFloat(length) * parseFloat(width) * parseFloat(height)) / 1000000; // Convert to m3
-            const volumeWeight = volume * 200; // 1m3 = 200kg
-            let calculatedCostByVolume: number;
-            if (volumeWeight <= 20) {
-                calculatedCostByVolume = baseCost;
-            } else {
-                calculatedCostByVolume = baseCost + (volumeWeight - 20) * pricePerKg;
-            }
-            setCostByVolume(Number(calculatedCostByVolume.toFixed(2)));
+            const volumeWeight = (parseFloat(length) * parseFloat(width) * parseFloat(height)) / 5000;
+            const volumeCost = volumeWeight * pricePerKg;
+
+            // Use the higher of volume cost or weight cost
+            setFinalCost(Math.round(Math.max(volumeCost, costByWeight)));
+        } else {
+            // If dimensions are not provided, use weight-based cost
+            setFinalCost(Math.round(costByWeight));
         }
 
         setDeliveryEstimate(`от ${rates.estimated_delivery_days_min} до ${rates.estimated_delivery_days_max} дней`);
@@ -87,8 +83,7 @@ export default function UnifiedTransportCalculator({ calculatorType }: Transport
         setStartCity("");
         setEndCity("");
         setShippingType("composition");
-        setCostByWeight(null);
-        setCostByVolume(null);
+        setFinalCost(null);
         setDeliveryEstimate(null);
         setCalculationError(null);
     };
@@ -178,8 +173,8 @@ export default function UnifiedTransportCalculator({ calculatorType }: Transport
                                     />
                                     <span
                                         className={`w-6 h-6 mr-3 border-2 rounded-full flex items-center justify-center ${shippingType === type.value ? 'border-[#0071E3] bg-[#0071E3]' : 'border-[#86868B]'}`}>
-                    {shippingType === type.value && <span className="w-2 h-2 bg-white rounded-full"></span>}
-                  </span>
+                                        {shippingType === type.value && <span className="w-2 h-2 bg-white rounded-full"></span>}
+                                    </span>
                                     <span className="text-sm text-[#1D1D1F]">{type.label}</span>
                                 </label>
                             ))}
@@ -200,31 +195,16 @@ export default function UnifiedTransportCalculator({ calculatorType }: Transport
                         </button>
                     </div>
                 </div>
-                {((calculatorType === 'workers' && (costByWeight !== null || costByVolume !== null)) ||
-                        (calculatorType === 'standard' && costByWeight !== null)) &&
-                    deliveryEstimate && (
-                        <div className="mt-12 p-8 bg-[#F5F5F7] rounded-2xl">
-                            {calculatorType === 'workers' ? (
-                                <>
-                                    <p className="text-2xl sm:text-3xl font-semibold text-[#1D1D1F] mb-3">
-                                        Цена по весу: <span className="text-[#0071E3]">{costByWeight} тенге</span>
-                                    </p>
-                                    {costByVolume !== null && (
-                                        <p className="text-2xl sm:text-3xl font-semibold text-[#1D1D1F] mb-3">
-                                            Цена по объему: <span className="text-[#0071E3]">{costByVolume} тенге</span>
-                                        </p>
-                                    )}
-                                </>
-                            ) : (
-                                <p className="text-2xl sm:text-3xl font-semibold text-[#1D1D1F] mb-3">
-                                    Стоимость доставки: <span className="text-[#0071E3]">{costByWeight} тенге</span>
-                                </p>
-                            )}
-                            <p className="text-sm text-[#86868B]">
-                                Ожидаемое время доставки: <span className="font-medium">{deliveryEstimate}</span>
-                            </p>
-                        </div>
-                    )}
+                {finalCost !== null && deliveryEstimate && (
+                    <div className="mt-12 p-8 bg-[#F5F5F7] rounded-2xl">
+                        <p className="text-2xl sm:text-3xl font-semibold text-[#1D1D1F] mb-3">
+                            Стоимость доставки: <span className="text-[#0071E3]">{finalCost} тенге</span>
+                        </p>
+                        <p className="text-sm text-[#86868B]">
+                            Ожидаемое время доставки: <span className="font-medium">{deliveryEstimate}</span>
+                        </p>
+                    </div>
+                )}
             </div>
         </main>
     );

@@ -1,4 +1,3 @@
-// src/app/api/shipping-rates/route.ts
 import { NextResponse } from 'next/server';
 import { db } from '@/db';
 import { shippingRoutes, baseCosts } from '@/db/schema';

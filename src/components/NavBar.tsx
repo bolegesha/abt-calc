@@ -1,15 +1,10 @@
 'use client'
 
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import Image from 'next/image'
-
+import { useUserData } from '@/hooks/UserData'
 export default function NavBar() {
-  const router = useRouter()
-
-  const handleLogout = () => {
-    router.push('/auth')
-  }
+  const { logout } = useUserData()
 
   return (
     <nav className="absolute top-0 left-0 right-0 bg-white shadow-md z-10">
@@ -36,8 +31,8 @@ export default function NavBar() {
               Профиль
             </Link>
             <button
-              onClick={handleLogout}
-              className="ml-4 text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md text-sm font-medium"
+              onClick={logout}
+              className="ml-4 text-gray-700 hover:bg-red-500 px-3 py-2 rounded-md text-sm font-medium"
             >
               Выйти 
             </button>

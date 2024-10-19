@@ -1,4 +1,3 @@
-// src/app/api/cities/route.ts
 import { NextResponse } from 'next/server';
 import { db } from '@/db';
 import { shippingRoutes } from '@/db/schema';
