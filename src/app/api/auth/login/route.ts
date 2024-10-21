@@ -19,7 +19,7 @@ export async function POST(request: Request) {
     }
 
     const result = await sql`
-      SELECT * FROM users WHERE email = ${email}
+      SELECT id, email, password, full_name FROM users WHERE email = ${email}
     `
 
     if (result.rows.length === 0) {
@@ -60,6 +60,6 @@ export async function POST(request: Request) {
 
   } catch (error) {
     console.error('Login error:', error)
-    return NextResponse.json({ message: 'Error logging in', error: (error as Error).message }, { status: 500 })
+    return NextResponse.json({ message: 'Error logging in' }, { status: 500 })
   }
 }
