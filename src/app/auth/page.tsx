@@ -20,7 +20,7 @@ export default function AuthPage() {
 
   useEffect(() => {
     if (user) {
-      router.replace('/')
+      router.prefetch('/')
     }
   }, [user, router])
 
