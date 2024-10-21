@@ -2,31 +2,36 @@ import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 
 export async function POST(request: Request) {
-  const { email, password } = await request.json()
+  try {
+    const { email, password } = await request.json()
 
-  const user = {
-    id: '1',
-    fullName: email.split('@')[0], 
-    email: email
+    // Simple validation
+    if (!email || !password) {
+      return NextResponse.json({ message: 'Missing email or password' }, { status: 400 })
+    }
+
+    const user = {
+      id: '1',
+      fullName: email.split('@')[0],
+      email: email
+    }
+
+    const token = 'mock_token_' + Math.random().toString(36).substr(2, 9)
+
+    const cookieOptions = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict' as const,
+      maxAge: 32400, // 9 hours (to match your JWT expiration)
+      path: '/',
+    }
+
+    cookies().set('token', token, cookieOptions)
+    cookies().set('userData', JSON.stringify(user), cookieOptions)
+
+    return NextResponse.json({ user, token })
+  } catch (error) {
+    console.error('Login error:', error)
+    return NextResponse.json({ message: 'Error logging in' }, { status: 500 })
   }
-
-  const token = 'mock_token_' + Math.random().toString(36).substr(2, 9)
-
-  cookies().set('token', token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
-    maxAge: 10800, // 1 hour
-    path: '/',
-  })
-
-  cookies().set('userData', JSON.stringify(user), {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
-    maxAge: 10800, // 1 hour
-    path: '/',
-  })
-
-  return NextResponse.json({ user, token })
 }
