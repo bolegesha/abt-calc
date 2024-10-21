@@ -17,12 +17,14 @@ export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true)
   const { user, error, loading, login, signup } = useUserData()
   const router = useRouter()
+  const [isRedirecting, setIsRedirecting] = useState(false)
 
   useEffect(() => {
-    if (user) {
-      router.prefetch('/')
+    if (user && !isRedirecting) {
+      setIsRedirecting(true)
+      router.push('/')
     }
-  }, [user, router])
+  }, [user, router, isRedirecting])
 
   const toggleAuthMode = () => {
     setIsLogin(!isLogin)
@@ -53,6 +55,11 @@ export default function AuthPage() {
   }
 
   return (
+      <>
+    {isRedirecting ? (
+        <div>Redirecting to home page...</div>
+    ) : (
+
       <div className="flex flex-col md:flex-row h-screen bg-[#F5F5F7]">
         <div className="md:w-3/5 h-1/3 md:h-full">
           <InteractiveMap />
@@ -141,5 +148,7 @@ export default function AuthPage() {
           </div>
         </div>
       </div>
+    )}
+      </>
   )
 }
