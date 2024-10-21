@@ -23,6 +23,28 @@
       "static/chunks/main-app-74d49dbf756a4cdc.js",
       "static/chunks/app/about/page-9178199743258f55.js"
     ],
+    "/profile/page": [
+      "static/chunks/webpack-fda52bd2086078ce.js",
+      "static/chunks/fd9d1056-1fbb8f2623a87aa3.js",
+      "static/chunks/117-1e8648ce6f40be9a.js",
+      "static/chunks/main-app-74d49dbf756a4cdc.js",
+      "static/chunks/529-70646f9bc0a70ea3.js",
+      "static/chunks/app/profile/page-35b279780d9c9319.js"
+    ],
+    "/page": [
+      "static/chunks/webpack-fda52bd2086078ce.js",
+      "static/chunks/fd9d1056-1fbb8f2623a87aa3.js",
+      "static/chunks/117-1e8648ce6f40be9a.js",
+      "static/chunks/main-app-74d49dbf756a4cdc.js",
+      "static/chunks/app/page-0a8b9a7b052e6eac.js"
+    ],
+    "/workers-calculator/page": [
+      "static/chunks/webpack-fda52bd2086078ce.js",
+      "static/chunks/fd9d1056-1fbb8f2623a87aa3.js",
+      "static/chunks/117-1e8648ce6f40be9a.js",
+      "static/chunks/main-app-74d49dbf756a4cdc.js",
+      "static/chunks/app/workers-calculator/page-14eb6fb6914ee606.js"
+    ],
     "/auth/page": [
       "static/chunks/webpack-fda52bd2086078ce.js",
       "static/chunks/fd9d1056-1fbb8f2623a87aa3.js",
@@ -37,28 +59,6 @@
       "static/chunks/117-1e8648ce6f40be9a.js",
       "static/chunks/main-app-74d49dbf756a4cdc.js",
       "static/chunks/app/calculator/page-ba32c2349d35eee6.js"
-    ],
-    "/page": [
-      "static/chunks/webpack-fda52bd2086078ce.js",
-      "static/chunks/fd9d1056-1fbb8f2623a87aa3.js",
-      "static/chunks/117-1e8648ce6f40be9a.js",
-      "static/chunks/main-app-74d49dbf756a4cdc.js",
-      "static/chunks/app/page-0a8b9a7b052e6eac.js"
-    ],
-    "/profile/page": [
-      "static/chunks/webpack-fda52bd2086078ce.js",
-      "static/chunks/fd9d1056-1fbb8f2623a87aa3.js",
-      "static/chunks/117-1e8648ce6f40be9a.js",
-      "static/chunks/main-app-74d49dbf756a4cdc.js",
-      "static/chunks/529-70646f9bc0a70ea3.js",
-      "static/chunks/app/profile/page-35b279780d9c9319.js"
-    ],
-    "/workers-calculator/page": [
-      "static/chunks/webpack-fda52bd2086078ce.js",
-      "static/chunks/fd9d1056-1fbb8f2623a87aa3.js",
-      "static/chunks/117-1e8648ce6f40be9a.js",
-      "static/chunks/main-app-74d49dbf756a4cdc.js",
-      "static/chunks/app/workers-calculator/page-14eb6fb6914ee606.js"
     ]
   }
 }
