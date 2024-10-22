@@ -35,11 +35,11 @@ export default function Home() {
         <h1 className="text-3xl font-bold">Welcome to Our Application, {user.email}!</h1>
         <button
             onClick={() => {
-              router.push('/auth')
+              router.push('/profile')
             }}
             className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
         >
-          Logout
+          profile
         </button>
       </div>
   )
