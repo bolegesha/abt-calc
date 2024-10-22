@@ -23,16 +23,16 @@ export default function AppleStyleFooter() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Contact Us</h3>
-            <p className="text-sm">123 Apple Street</p>
-            <p className="text-sm">Cupertino, CA 95014</p>
-            <p className="text-sm">United States</p>
+            <p className="text-sm">Панфилова 14</p>
+            <p className="text-sm">г. Алматы</p>
+            <p className="text-sm">Республика Казахстан</p>
           </div>
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Quick Links</h3>
             <ul className="space-y-2">
-              <li><Link href="/" className="text-sm hover:underline">Home</Link></li>
-              <li><Link href="/calculator" className="text-sm hover:underline">Calculator</Link></li>
-              <li><Link href="/about" className="text-sm hover:underline">About Us</Link></li>
+              <li><Link href="/" className="text-sm hover:underline">Главная</Link></li>
+              <li><Link href="/calculator" className="text-sm hover:underline">Калькулятор доставки</Link></li>
+              <li><Link href="/about" className="text-sm hover:underline">О нас</Link></li>
             </ul>
           </div>
           <div>
@@ -64,7 +64,7 @@ export default function AppleStyleFooter() {
               />
               <button
                 type="submit"
-                className="w-full px-4 py-2 bg-[#0071e3] text-white rounded-md hover:bg-[#0077ed] transition-colors focus:outline-none focus:ring-2 focus:ring-[#0071e3] focus:ring-opacity-50"
+                className="w-full px-4 py-2 bg-[#00358E] text-white rounded-md hover:bg-[#0077ed] transition-colors focus:outline-none focus:ring-2 focus:ring-[#0071e3] focus:ring-opacity-50"
               >
                 Submit
               </button>
@@ -72,7 +72,7 @@ export default function AppleStyleFooter() {
           </div>
         </div>
         <div className="mt-8 pt-8 border-t border-gray-200 text-center text-sm text-gray-500">
-          © {new Date().getFullYear()} Your Company Name. All rights reserved.
+          © {new Date().getFullYear()} TOO "ABT & E-trans". All rights reserved.
         </div>
       </div>
     </footer>

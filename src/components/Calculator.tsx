@@ -172,10 +172,10 @@ export default function UnifiedTransportCalculator({ calculatorType }: Transport
                                         className="sr-only"
                                     />
                                     <span
-                                        className={`w-6 h-6 mr-3 border-2 rounded-full flex items-center justify-center ${shippingType === type.value ? 'border-[#0071E3] bg-[#0071E3]' : 'border-[#86868B]'}`}>
+                                        className={`w-6 h-6 mr-3 border-2 rounded-full flex items-center justify-center ${shippingType === type.value ? 'border-[#0071E3] bg-[#00358E]' : 'border-[#86868B]'}`}>
                                         {shippingType === type.value && <span className="w-2 h-2 bg-white rounded-full"></span>}
                                     </span>
-                                    <span className="text-sm text-[#1D1D1F]">{type.label}</span>
+                                    <span className="text-sm text-[#00358E]">{type.label}</span>
                                 </label>
                             ))}
                         </div>
@@ -183,13 +183,13 @@ export default function UnifiedTransportCalculator({ calculatorType }: Transport
                     <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6 pt-4">
                         <button
                             onClick={calculateCost}
-                            className="flex-1 bg-[#0071E3] text-white py-3 px-6 rounded-full hover:bg-[#0077ED] transition-colors focus:outline-none focus:ring-2 focus:ring-[#0071E3] focus:ring-opacity-50"
+                            className="flex-1 bg-[#00358E] text-white py-3 px-6 rounded-full hover:bg-[#0077ED] transition-colors focus:outline-none focus:ring-2 focus:ring-[#0071E3] focus:ring-opacity-50"
                         >
                             Посчитать
                         </button>
                         <button
                             onClick={clear}
-                            className="flex-1 bg-[#F5F5F7] text-[#0071E3] py-3 px-6 rounded-full hover:bg-[#E8E8ED] transition-colors focus:outline-none focus:ring-2 focus:ring-[#0071E3] focus:ring-opacity-50"
+                            className="flex-1 bg-[#F5F5F7] text-[#00358E] py-3 px-6 rounded-full hover:bg-[#E8E8ED] transition-colors focus:outline-none focus:ring-2 focus:ring-[#0071E3] focus:ring-opacity-50"
                         >
                             Очистить
                         </button>
@@ -198,9 +198,9 @@ export default function UnifiedTransportCalculator({ calculatorType }: Transport
                 {finalCost !== null && deliveryEstimate && (
                     <div className="mt-12 p-8 bg-[#F5F5F7] rounded-2xl">
                         <p className="text-2xl sm:text-3xl font-semibold text-[#1D1D1F] mb-3">
-                            Стоимость доставки: <span className="text-[#0071E3]">{finalCost} тенге</span>
+                            Стоимость доставки: <span className="text-[#00358E]">{finalCost} тенге</span>
                         </p>
-                        <p className="text-sm text-[#86868B]">
+                        <p className="text-sm text-[#00358E]">
                             Ожидаемое время доставки: <span className="font-medium">{deliveryEstimate}</span>
                         </p>
                     </div>
