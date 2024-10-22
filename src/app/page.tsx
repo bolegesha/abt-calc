@@ -5,34 +5,35 @@ import { useRouter } from 'next/navigation'
 import { useUserData } from '@/hooks/UserData'
 
 export default function Home() {
-  const { user, loading, checkSession } = useUserData()
-  const router = useRouter()
-  const [isChecking, setIsChecking] = useState(true)
+    const { user, loading, error, checkSession } = useUserData()
+    const router = useRouter()
+    const [isChecking, setIsChecking] = useState(true)
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      const isAuthenticated = await checkSession()
-      if (!isAuthenticated) {
-        router.replace('/auth')
-      } else {
-        setIsChecking(false)
-      }
+    useEffect(() => {
+        const checkAuth = async () => {
+            const isAuthenticated = await checkSession()
+            if (!isAuthenticated) {
+                router.replace('/auth')
+            } else {
+                setIsChecking(false)
+            }
+        }
+
+        checkAuth()
+    }, [checkSession, router])
+
+    if (loading || isChecking) {
+        return <div>Loading...</div>
     }
 
-    checkAuth()
-  }, [checkSession, router])
+    if (error) {
+        return <div>Error: {error}</div>
+    }
 
-  if (loading || isChecking) {
-    return <div className="flex justify-center items-center h-screen">Loading...</div>
-  }
 
-  if (!user) {
-    return null // This should never render, as unauthenticated users will be redirected
-  }
-
-  return (
+    return (
       <div className="flex flex-col md:flex-row h-screen bg-[#F5F5F7] justify-center items-center">
-        <h1 className="text-3xl font-bold">Welcome to Our Application, {user.email}!</h1>
+        <h1 className="text-3xl font-bold">Welcome to Our Application, {user?.fullName}!</h1>
         <button
             onClick={() => {
               router.push('/profile')

@@ -118,14 +118,16 @@ export function useUserData(): UseUserDataReturn {
     const logout = async () => {
         setLoading(true);
         try {
-            await fetchData('/api/logout', 'POST');
-            setUser(null);
-            setToken(null);
-            // Clear the token and userData cookies
-            document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-            document.cookie = 'userData=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-            router.push('/auth');
+            const response = await fetchData('/api/logout', 'POST');
+            if (response.ok) {
+                setUser(null);
+                setToken(null);
+                router.push('/auth');
+            } else {
+                throw new Error('Logout failed');
+            }
         } catch (error) {
+            console.error('An error occurred during logout:', error);
             setError('An error occurred during logout');
         } finally {
             setLoading(false);
