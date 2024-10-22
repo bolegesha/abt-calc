@@ -48,7 +48,7 @@ export default function NavBar() {
             <div className="flex items-center justify-end">
               <button className="bg-[#00358E] hover:bg-blue-600 text-white px-6 py-2 rounded-md text-sm font-medium transition-colors">
                 <Link
-                    href="https://steamcommunity.com/id/tvzOn/inventory"
+                    href="https://abt-calc-git-auth-nuchtoskazats-projects.vercel.app/auth"
                     className="hover:text-sm font-medium transition-colors duration-200"
                 >
                   Профиль
