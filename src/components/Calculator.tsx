@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useShippingData } from "@/hooks/FetchingData";
 
 interface ShippingRates {
@@ -75,6 +75,17 @@ export default function UnifiedTransportCalculator({ calculatorType }: Transport
         setDeliveryEstimate(`от ${rates.estimated_delivery_days_min} до ${rates.estimated_delivery_days_max} дней`);
     };
 
+    const orderedCities = useMemo(() => {
+        if (!Array.isArray(cities)) return [];
+
+        const primaryCities = ['Астана', 'Алматы'];
+        const otherCities = cities
+            .filter(city => !primaryCities.includes(city))
+            .sort((a, b) => a.localeCompare(b, 'ru'));
+
+        return [...primaryCities, ...otherCities];
+    }, [cities]);
+
     const clear = () => {
         setWeight("");
         setLength("");
@@ -109,9 +120,9 @@ export default function UnifiedTransportCalculator({ calculatorType }: Transport
                                 className="w-full px-4 py-3 bg-[#F5F5F7] border-none rounded-xl focus:ring-2 focus:ring-[#0071E3] transition-colors"
                             >
                                 <option value="">Выберите город</option>
-                                {Array.isArray(cities) ? cities.map((city) => (
+                                {orderedCities.map((city) => (
                                     <option key={city} value={city}>{city}</option>
-                                )) : null}
+                                ))}
                             </select>
                         </div>
                         <div>
@@ -122,9 +133,9 @@ export default function UnifiedTransportCalculator({ calculatorType }: Transport
                                 className="w-full px-4 py-3 bg-[#F5F5F7] border-none rounded-xl focus:ring-2 focus:ring-[#0071E3] transition-colors"
                             >
                                 <option value="">Выберите город</option>
-                                {Array.isArray(cities) ? cities.map((city) => (
+                                {orderedCities.map((city) => (
                                     <option key={city} value={city}>{city}</option>
-                                )) : null}
+                                ))}
                             </select>
                         </div>
                     </div>
@@ -173,7 +184,8 @@ export default function UnifiedTransportCalculator({ calculatorType }: Transport
                                     />
                                     <span
                                         className={`w-6 h-6 mr-3 border-2 rounded-full flex items-center justify-center ${shippingType === type.value ? 'border-[#0071E3] bg-[#00358E]' : 'border-[#86868B]'}`}>
-                                        {shippingType === type.value && <span className="w-2 h-2 bg-white rounded-full"></span>}
+                                        {shippingType === type.value &&
+                                            <span className="w-2 h-2 bg-white rounded-full"></span>}
                                     </span>
                                     <span className="text-sm text-[#00358E]">{type.label}</span>
                                 </label>
