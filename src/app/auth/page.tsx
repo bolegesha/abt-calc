@@ -8,7 +8,7 @@ import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { useUserData } from '@/hooks/UserData'
 
-const InteractiveMap = dynamic(() => import('../../components/InteractiveMap'), {
+const InteractiveMap = dynamic(() => import('@/components/InteractiveMap'), {
     ssr: false,
     loading: () => <div className="h-full w-full flex items-center justify-center bg-gray-200">Loading map...</div>
 })
@@ -22,7 +22,7 @@ export default function AuthPage() {
     useEffect(() => {
         if (user && !isRedirecting) {
             setIsRedirecting(true)
-            router.push('/')
+            router.push('/profile')
         }
     }, [user, router, isRedirecting])
 
@@ -129,7 +129,7 @@ export default function AuthPage() {
 
                                 <Button
                                     type="submit"
-                                    className="w-full bg-[#0071E3] text-white py-4 px-6 rounded-full text-lg font-medium hover:bg-[#0077ED] transition-colors focus:outline-none focus:ring-2 focus:ring-[#0071E3] focus:ring-opacity-50"
+                                    className="w-full bg-[#00358E] text-white py-4 px-6 rounded-full text-lg font-medium hover:bg-[#0077ED] transition-colors focus:outline-none focus:ring-2 focus:ring-[#0071E3] focus:ring-opacity-50"
                                     disabled={loading}
                                 >
                                     {loading ? 'Processing...' : (isLogin ? 'Sign In' : 'Sign Up')}
@@ -140,7 +140,7 @@ export default function AuthPage() {
                                 <Button
                                     onClick={toggleAuthMode}
                                     variant="link"
-                                    className="text-[#0071E3] hover:text-[#0077ED] text-lg"
+                                    className="text-[#00358E] hover:text-[#0077ED] text-lg"
                                 >
                                     {isLogin ? 'Create a new account' : 'Already have an account? Sign in'}
                                 </Button>

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 import { useUserData } from '@/hooks/UserData'
 import { Sidebar } from '@/components/SideBar'
-import { UserCircle, Settings, Bell, HelpCircle, House } from 'lucide-react'
+import { UserCircle, Settings, Bell, HelpCircle, Trello, ChartBarIncreasing } from 'lucide-react'
 
 
 export default function ProfilePage() {
@@ -15,11 +15,12 @@ export default function ProfilePage() {
     const [activeSection, setActiveSection] = useState('profile')
 
     const sidebarItems = [
-        { icon: House, label: 'Home', href: 'http://localhost:3000/' },
         { icon: UserCircle, label: 'Profile', href: '#profile' },
+        { icon: Trello, label: 'Docs', href: '#docs' },
+        { icon: ChartBarIncreasing, label: 'Active Orders', href: '#orders' },
         { icon: Settings, label: 'Settings', href: '#settings' },
         { icon: Bell, label: 'Notifications', href: '#notifications' },
-        { icon: HelpCircle, label: 'Help', href: '#help' },
+        { icon: HelpCircle, label: 'Help', href: '#help' }
     ]
 
     const handleSidebarItemClick = (sectionId: string) => {
@@ -99,6 +100,20 @@ export default function ProfilePage() {
                     {activeSection === 'help' && (
                         <div className="space-y-4">
                             <h1 className="text-2xl font-semibold text-[#1D1D1F]">Help & Support</h1>
+                            {/* Add help content */}
+                        </div>
+                    )}
+
+                    {activeSection === 'docs' && (
+                        <div className="space-y-4">
+                            <h1 className="text-2xl font-semibold text-[#1D1D1F]">Documents</h1>
+                            {/* Add help content */}
+                        </div>
+                    )}
+
+                    {activeSection === 'orders' && (
+                        <div className="space-y-4">
+                            <h1 className="text-2xl font-semibold text-[#1D1D1F]">Active Orders</h1>
                             {/* Add help content */}
                         </div>
                     )}
