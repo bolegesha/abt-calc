@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 import { useUserData } from '@/hooks/UserData'
 import { Sidebar } from '@/components/SideBar'
-import { UserCircle, Settings, Bell, HelpCircle, House, Moon, Sun, Volume2, Globe, Shield, Key, ChevronRight } from 'lucide-react'
+import { UserCircle, Settings, Bell, HelpCircle, House, Moon, Volume2, Globe, Key } from 'lucide-react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Switch } from "@/components/ui/switch"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -70,16 +70,16 @@ export default function BasicProfilePage() {
                     {activeSection === 'profile' && (
                         <Card>
                             <CardHeader>
-                                <CardTitle className="text-2xl font-semibold text-[#1D1D1F]">Профиль</CardTitle>
+                                <CardTitle className="text-2xl font-semibold text-gray-700">Профиль</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <div>
                                     <Label className="text-sm font-medium text-[#86868B]">Имя пользователя</Label>
-                                    <p className="mt-1 text-lg text-[#1D1D1F]">{user.fullName}</p>
+                                    <p className="mt-1 text-lg text-gray-700">{user.fullName}</p>
                                 </div>
                                 <div>
                                     <Label className="text-sm font-medium text-[#86868B]">Email</Label>
-                                    <p className="mt-1 text-lg text-[#1D1D1F]">{user.email}</p>
+                                    <p className="mt-1 text-lg text-gray-700">{user.email}</p>
                                 </div>
                             </CardContent>
                             <CardFooter>
@@ -101,11 +101,11 @@ export default function BasicProfilePage() {
                                 <Card className="bg-white shadow-sm border-none rounded-3xl overflow-hidden">
                                     <Table>
                                         <TableHeader>
-                                            <TableRow className="bg-[#00358E] border-b border-white/10">
-                                                <TableHead className="text-white font-semibold text-lg py-4">ID заказа</TableHead>
-                                                <TableHead className="text-white font-semibold text-lg py-4">Дата</TableHead>
-                                                <TableHead className="text-white font-semibold text-lg py-4">Статус</TableHead>
-                                                <TableHead className="text-white font-semibold text-lg py-4 text-right">Сумма</TableHead>
+                                            <TableRow className="bg-white border-b border-white/10">
+                                                <TableHead className="text-[#00358E] font-semibold text-lg py-4">ID заказа</TableHead>
+                                                <TableHead className="text-[#00358E] font-semibold text-lg py-4">Дата</TableHead>
+                                                <TableHead className="text-[#00358E] font-semibold text-lg py-4">Статус</TableHead>
+                                                <TableHead className="text-[#00358E] font-semibold text-lg py-4 text-right">Сумма</TableHead>
                                             </TableRow>
                                         </TableHeader>
                                         <TableBody>
@@ -135,27 +135,27 @@ export default function BasicProfilePage() {
 
                     {activeSection === 'settings' && (
                         <div className="space-y-8">
-                            <h1 className="text-4xl font-semibold text-[#00358E]">Настройки</h1>
+                            <h1 className="text-4xl font-semibold text-gray-700">Настройки</h1>
                             <Card className="bg-white shadow-sm border-none rounded-2xl">
                                 <CardContent className="p-6 space-y-4">
                                     <div className="flex items-center justify-between py-2 border-b border-[#00358E]/10">
                                         <div className="flex items-center space-x-3">
                                             <Moon className="text-[#00358E]" />
-                                            <span className="text-[#00358E] font-medium">Темный режим</span>
+                                            <span className="text-gray-700 font-medium">Темный режим</span>
                                         </div>
                                         <Switch />
                                     </div>
                                     <div className="flex items-center justify-between py-2 border-b border-[#00358E]/10">
                                         <div className="flex items-center space-x-3">
                                             <Volume2 className="text-[#00358E]" />
-                                            <span className="text-[#00358E] font-medium">Звуковые уведомления</span>
+                                            <span className="text-gray-700 font-medium">Звуковые уведомления</span>
                                         </div>
                                         <Switch />
                                     </div>
                                     <div className="flex items-center justify-between py-2 border-b border-[#00358E]/10">
                                         <div className="flex items-center space-x-3">
                                             <Globe className="text-[#00358E]" />
-                                            <span className="text-[#00358E] font-medium">Язык</span>
+                                            <span className="text-gray-700 font-medium">Язык</span>
                                         </div>
                                         <Select defaultValue="ru">
                                             <SelectTrigger className="w-[120px] border-none text-[#00358E]">
@@ -169,7 +169,7 @@ export default function BasicProfilePage() {
                                         </Select>
                                     </div>
 
-                                    <Button variant="outline" className="w-full mt-4 border-[#00358E] text-[#00358E] hover:bg-[#00358E] hover:text-white">
+                                    <Button variant="outline" className="w-full mt-4 border-[#00358E] text-gray-700 hover:bg-[#00358E] hover:text-white">
                                         <Key className="mr-2 h-4 w-4" /> Изменить пароль
                                     </Button>
                                 </CardContent>

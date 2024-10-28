@@ -136,7 +136,7 @@ export default function WorkerProfilePage() {
                                 <CardTitle className="text-2xl font-semibold text-[#1D1D1F]">Активные заказы</CardTitle>
                             </CardHeader>
                             <CardContent>
-                                {/* Worker orders section */}
+
                                 <p>Здесь будут отображаться ваши активные заказы.</p>
                             </CardContent>
                         </Card>
@@ -253,10 +253,9 @@ export default function WorkerProfilePage() {
                     {activeSection === 'settings' && (
                         <Card>
                             <CardHeader>
-                                <CardTitle className="text-2xl font-semibold text-[#1D1D1F]">Настройки</CardTitle>
+                                <CardTitle className="text-2xl font-semibold text-black">Настройки</CardTitle>
                             </CardHeader>
                             <CardContent>
-                                {/* Worker specific settings */}
                                 <p>Здесь будут отображаться ваши настройки.</p>
                             </CardContent>
                         </Card>
@@ -268,7 +267,6 @@ export default function WorkerProfilePage() {
                                 <CardTitle className="text-2xl font-semibold text-[#1D1D1F]">Поддержка</CardTitle>
                             </CardHeader>
                             <CardContent>
-                                {/* Worker specific help content */}
                                 <p>Здесь будет отображаться информация о поддержке.</p>
                             </CardContent>
                         </Card>
