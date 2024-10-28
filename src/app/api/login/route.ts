@@ -1,3 +1,4 @@
+// app/api/login/route.ts
 import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 import { db } from '@/db'
@@ -28,32 +29,30 @@ export async function POST(request: Request) {
             return NextResponse.json({ message: 'Invalid email or password' }, { status: 401 })
         }
 
-        // Create a session token (you might want to use a proper JWT library for this)
+        // Create a session token
         const token = 'session_token_' + Math.random().toString(36).substr(2, 9)
 
         const cookieOptions = {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'strict' as const,
-            maxAge: 10800, // 9 hours
+            maxAge: 10800, // 3 hours
             path: '/',
         }
 
-        cookies().set('token', token, cookieOptions)
-        cookies().set('userData', JSON.stringify({
-            id: user.id,
-            fullName: user.fullName,
-            email: user.email
-        }), cookieOptions)
+        // Don't include password in the response
+        const { password: _, ...userWithoutPassword } = user;
 
-        return NextResponse.json({ 
-            user: {
-                id: user.id,
-                fullName: user.fullName,
-                email: user.email
-            }, 
-            token 
+        const response = NextResponse.json({
+            user: userWithoutPassword,
+            token
         })
+
+        response.cookies.set('token', token, cookieOptions)
+        response.cookies.set('userData', JSON.stringify(userWithoutPassword), cookieOptions)
+
+        return response
+
     } catch (error) {
         console.error('Login error:', error)
         return NextResponse.json({ message: 'Error logging in' }, { status: 500 })

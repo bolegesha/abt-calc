@@ -1,10 +1,12 @@
+// hooks/UserData.ts
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 
 interface User {
     id: string;
-    fullName: string;  // Changed from 'name' to 'fullName'
+    fullName: string;
     email: string;
+    user_type: 'user' | 'worker' | 'admin'; // Add admin type
 }
 
 export interface UseUserDataReturn {
@@ -13,19 +15,18 @@ export interface UseUserDataReturn {
     error: string | null;
     loading: boolean;
     login: (email: string, password: string) => Promise<void>;
-    signup: (email: string, password: string, name: string) => Promise<void>;
+    signup: (email: string, password: string, name: string, userType: 'user' | 'worker') => Promise<void>;
     logout: () => Promise<void>;
     checkSession: () => Promise<boolean>;
 }
 
-// Implement fetchData function
 async function fetchData(url: string, method: string, body?: object) {
     const options: RequestInit = {
         method,
         headers: {
             'Content-Type': 'application/json',
         },
-        credentials: 'include', // This is important for handling cookies
+        credentials: 'include',
     };
 
     if (body) {
@@ -80,9 +81,12 @@ export function useUserData(): UseUserDataReturn {
                 const data = await response.json();
                 setUser(data.user);
                 setToken(data.token);
-                // Set a cookie with the token
-                document.cookie = `token=${data.token}; path=/; max-age=86400; samesite=strict; secure`;
-                router.push('/');
+                // Redirect based on user type
+                if (data.user.user_type === 'worker') {
+                    router.push('/worker-profile');
+                } else {
+                    router.push('/basic-profile');
+                }
             } else {
                 const errorData = await response.json();
                 setError(errorData.message || 'Login failed');
@@ -94,22 +98,37 @@ export function useUserData(): UseUserDataReturn {
         }
     };
 
-    const signup = async (email: string, password: string, name: string) => {
+    const signup = async (email: string, password: string, name: string, userType: 'user' | 'worker' = 'user') => {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetchData('/api/signup', 'POST', { email, password, name });
-            if (response.ok) {
-                const data = await response.json();
-                setUser(data.user);
-                setToken(data.token);
-                router.push('/');
-            } else {
-                const errorData = await response.json();
-                setError(errorData.message || 'Signup failed');
+            const response = await fetch('/api/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email,
+                    password,
+                    name,
+                    userType // Make sure we're using userType consistently
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Signup failed');
             }
+
+            setUser(data.user);
+            setToken(data.token);
+
+            return data;
         } catch (error) {
-            setError('An error occurred during signup');
+            console.error('Signup error:', error);
+            setError(error instanceof Error ? error.message : 'An error occurred during signup');
+            throw error;
         } finally {
             setLoading(false);
         }

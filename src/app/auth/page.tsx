@@ -19,30 +19,56 @@ export default function AuthPage() {
     const router = useRouter()
     const [isRedirecting, setIsRedirecting] = useState(false)
 
+    // AuthPage.tsx
     useEffect(() => {
         if (user && !isRedirecting) {
             setIsRedirecting(true)
-            router.push('/profile')
+            switch(user.user_type) {
+                case 'admin':
+                    router.push('/admin');
+                    break;
+                case 'worker':
+                    router.push('/worker-profile');
+                    break;
+                default:
+                    router.push('/profile');
+                    break;
+            }
         }
     }, [user, router, isRedirecting])
 
-    const toggleAuthMode = () => {
-        setIsLogin(!isLogin)
+    const toggleAuthMode = (): void => {
+        setIsLogin((prev) => !prev)
     }
 
+
+    // AuthPage.tsx
     const handleAuth = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
 
-        const formData = new FormData(event.currentTarget)
-        const email = formData.get('email') as string
-        const password = formData.get('password') as string
-        const name = formData.get('name') as string
+        try {
+            const formData = new FormData(event.currentTarget)
+            const email = formData.get('email') as string
+            const password = formData.get('password') as string
+            const name = formData.get('name') as string
+            const userType = formData.get('user_type') as 'user' | 'worker'
 
-        if (isLogin) {
-            await login(email, password)
-        } else {
-            await signup(email, password, name)
-            setIsLogin(true) // Switch to login mode after successful signup
+            console.log('Form submission:', {
+                email,
+                name,
+                userType,
+                isLogin
+            });
+
+            if (isLogin) {
+                await login(email, password)
+            } else {
+                await signup(email, password, name, userType)
+                setIsLogin(true) // Move this outside the if check
+            }
+        } catch (error) {
+            console.error('Auth error:', error)
+            // Optionally handle error here if needed
         }
     }
 
@@ -59,7 +85,6 @@ export default function AuthPage() {
             {isRedirecting ? (
                 <div>Redirecting to home page...</div>
             ) : (
-
                 <div className="flex flex-col md:flex-row h-screen bg-[#F5F5F7]">
                     <div className="md:w-3/5 h-1/3 md:h-full">
                         <InteractiveMap />
@@ -83,20 +108,36 @@ export default function AuthPage() {
                             )}
                             <form onSubmit={handleAuth} className="space-y-8">
                                 {!isLogin && (
-                                    <div>
-                                        <Label htmlFor="name" className="text-[#1D1D1F] text-sm font-medium">
-                                            Full Name
-                                        </Label>
-                                        <Input
-                                            id="name"
-                                            name="name"
-                                            type="text"
-                                            autoComplete="name"
-                                            required
-                                            className="mt-1 w-full px-4 py-4 bg-white border border-[#D1D1D6] rounded-xl focus:ring-2 focus:ring-[#0071E3] focus:border-transparent transition-colors text-lg"
-                                            placeholder="Enter your full name"
-                                        />
-                                    </div>
+                                    <>
+                                        <div>
+                                            <Label htmlFor="name" className="text-[#1D1D1F] text-sm font-medium">
+                                                Full Name
+                                            </Label>
+                                            <Input
+                                                id="name"
+                                                name="name"
+                                                type="text"
+                                                autoComplete="name"
+                                                required
+                                                className="mt-1 w-full px-4 py-4 bg-white border border-[#D1D1D6] rounded-xl focus:ring-2 focus:ring-[#0071E3] focus:border-transparent transition-colors text-lg"
+                                                placeholder="Enter your full name"
+                                            />
+                                        </div>
+                                        <div>
+                                            <Label htmlFor="user_type" className="text-[#1D1D1F] text-sm font-medium">
+                                                Account Type
+                                            </Label>
+                                            <select
+                                                id="user_type"
+                                                name="user_type"
+                                                required
+                                                className="mt-1 w-full px-4 py-4 bg-white border border-[#D1D1D6] rounded-xl focus:ring-2 focus:ring-[#0071E3] focus:border-transparent transition-colors text-lg"
+                                            >
+                                                <option value="user">User</option>
+                                                <option value="worker">Worker</option>
+                                            </select>
+                                        </div>
+                                    </>
                                 )}
                                 <div>
                                     <Label htmlFor="email-address" className="text-[#1D1D1F] text-sm font-medium">
@@ -129,22 +170,22 @@ export default function AuthPage() {
 
                                 <Button
                                     type="submit"
-                                    className="w-full bg-[#00358E] text-white py-4 px-6 rounded-full text-lg font-medium hover:bg-[#0077ED] transition-colors focus:outline-none focus:ring-2 focus:ring-[#0071E3] focus:ring-opacity-50"
+                                    className="w-150 bg-[#00358E] text-white py-4 px-6 rounded-40 text-lg font-medium hover:bg-[#0077ED] transition-colors focus:outline-none focus:ring-2 focus:ring-[#0071E3] focus:ring-opacity-50"
                                     disabled={loading}
                                 >
                                     {loading ? 'Processing...' : (isLogin ? 'Sign In' : 'Sign Up')}
                                 </Button>
                             </form>
 
-                            <div className="text-center">
-                                <Button
-                                    onClick={toggleAuthMode}
-                                    variant="link"
-                                    className="text-[#00358E] hover:text-[#0077ED] text-lg"
-                                >
-                                    {isLogin ? 'Create a new account' : 'Already have an account? Sign in'}
-                                </Button>
-                            </div>
+                            {/*<div className="text-center">*/}
+                            {/*    <Button*/}
+                            {/*        onClick={toggleAuthMode}*/}
+                            {/*        variant="link"*/}
+                            {/*        className="text-[#00358E] hover:text-[#0077ED] text-lg"*/}
+                            {/*    >*/}
+                            {/*        {isLogin ? 'Create a new account' : 'Already have an account? Sign in'}*/}
+                            {/*    </Button>*/}
+                            {/*</div>*/}
                         </div>
                     </div>
                 </div>

@@ -1,15 +1,29 @@
+// db/index.ts
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';
+import * as schema from './schema';
 
 const pool = new Pool({
-    host: process.env.POSTGRES_HOST,
-    user: process.env.POSTGRES_USER,
-    password: process.env.POSTGRES_PASSWORD,
-    database: process.env.POSTGRES_DATABASE,
+    connectionString: process.env.POSTGRES_URL_NON_POOLING,
     ssl: {
-        rejectUnauthorized: process.env.NODE_ENV === 'production',
+        rejectUnauthorized: true,
     },
-    connectionString: process.env.DATABASE_URL,
 });
 
-export const db = drizzle(pool);
+// const testConnection = async () => {
+//     let client;
+//     try {
+//         client = await pool.connect();
+//         const result = await client.query('SELECT NOW()');
+//     } catch (err) {
+//         console.error('Error connecting to database:', err);
+//         throw err;
+//     } finally {
+//         if (client) {
+//             client.release();
+//         }
+//     }
+// };
+
+
+export const db = drizzle(pool, { schema });

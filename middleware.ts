@@ -3,39 +3,34 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 export function middleware(request: NextRequest) {
-    // Get the token from cookies
-    const token = request.cookies.get('token')
+    const userData = request.cookies.get('userData')?.value
 
-    // Get the path the user is trying to access
-    const path = request.nextUrl.pathname
+    if (userData) {
+        const user = JSON.parse(userData)
 
-    // Define protected routes (routes that require authentication)
-    const protectedRoutes = ['/profile']
-    // Define auth routes (login/signup pages)
-    const authRoutes = ['/auth']
-
-    // If user has a token (is logged in)
-    if (token) {
-        // If they try to access auth pages, redirect to home
-        if (authRoutes.includes(path)) {
-            return NextResponse.redirect(new URL('/', request.url))
+        // Redirect based on user type
+        if (request.nextUrl.pathname === '/profile') {
+            if (user.user_type === 'worker') {
+                return NextResponse.redirect(new URL('/worker-profile', request.url))
+            } else if (user.user_type === 'admin') {
+                return NextResponse.redirect(new URL('/admin', request.url))
+            }
         }
-    } else {
-        // If user is not logged in and tries to access protected routes
-        if (protectedRoutes.includes(path)) {
+
+        // Protect admin routes
+        if (request.nextUrl.pathname.startsWith('/admin') && user.user_type !== 'admin') {
+            return NextResponse.redirect(new URL('/auth', request.url))
+        }
+
+        // Protect worker routes
+        if (request.nextUrl.pathname.startsWith('/worker-profile') && user.user_type !== 'worker') {
             return NextResponse.redirect(new URL('/auth', request.url))
         }
     }
 
-    // Allow the request to continue
     return NextResponse.next()
 }
 
-// Configure which routes middleware will run on
 export const config = {
-    matcher: [
-        '/auth',
-        '/profile',
-        // Add other protected routes here
-    ]
+    matcher: ['/profile', '/admin', '/worker-profile', '/auth']
 }

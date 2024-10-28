@@ -1,8 +1,9 @@
+// app/api/users/route.ts
 import { NextResponse } from 'next/server';
 import { db } from '@/db';
 import { users } from '@/db/schema';
-import { userSchema, createUserSchema } from '@/schemas';
-import { eq } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';  // Make sure to import eq
+import bcrypt from 'bcrypt';
 
 export async function GET() {
     try {
@@ -17,64 +18,55 @@ export async function GET() {
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const validatedUser = createUserSchema.parse(body);
 
-        const newUser = await db.insert(users).values({
-            email: validatedUser.email,
-            password: validatedUser.password,
+
+        // Validate required fields
+        if (!body.email || !body.password || !body.name) {
+            return NextResponse.json({
+                message: 'Missing required fields'
+            }, { status: 400 });
+        }
+
+        // Hash the password
+        const hashedPassword = await bcrypt.hash(body.password, 10);
+
+        // Create the user
+        const [newUser] = await db.insert(users).values({
+            email: body.email,
+            password: hashedPassword,
+            fullName: body.name,
+            user_type: body.user_type
         }).returning();
-        return NextResponse.json(newUser[0], { status: 201 });
+
+        // Remove password from response
+        const { password: _, ...userWithoutPassword } = newUser;
+
+
+        return NextResponse.json(userWithoutPassword, { status: 201 });
     } catch (error) {
         console.error('Failed to create user:', error);
-        return NextResponse.json({ error: 'Failed to create user' }, { status: 400 });
-    }
-}
-
-export async function PUT(request: Request) {
-    try {
-        const body = await request.json();
-        const validatedUser = userSchema.parse(body);
-
-        if (!validatedUser.id) {
-            return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
-        }
-
-        const updatedUser = await db.update(users)
-            .set({
-                email: validatedUser.email,
-                password: validatedUser.password,
-            })
-            .where(eq(users.id, validatedUser.id))
-            .returning();
-
-        if (updatedUser.length === 0) {
-            return NextResponse.json({ error: 'User not found' }, { status: 404 });
-        }
-
-        return NextResponse.json(updatedUser[0]);
-    } catch (error) {
-        console.error('Failed to update user:', error);
-        return NextResponse.json({ error: 'Failed to update user' }, { status: 400 });
+        return NextResponse.json({
+            message: 'Failed to create user',
+            error: error instanceof Error ? error.message : 'Unknown error'
+        }, { status: 500 });
     }
 }
 
 export async function DELETE(request: Request) {
     try {
         const body = await request.json();
-        const { id } = body;
-        if (!id || typeof id !== 'number') {
-            return NextResponse.json({ error: 'Valid user ID is required' }, { status: 400 });
+
+        if (!body.id) {
+            return NextResponse.json({ message: 'User ID is required' }, { status: 400 });
         }
 
-        const deletedUser = await db.delete(users).where(eq(users.id, id)).returning();
-
-        if (deletedUser.length === 0) {
-            return NextResponse.json({ error: 'User not found' }, { status: 404 });
-        }
+        // Fixed: Use eq for comparison
+        await db.delete(users)
+            .where(eq(users.id, body.id))
+            .execute();
 
         return NextResponse.json({ message: 'User deleted successfully' });
     } catch (error) {
-        console.error('Failed to delete user:', error);
-        return NextResponse.json({ error: 'Failed to delete user' }, { status: 400 });
+        return NextResponse.json({ message: 'Failed to delete user' }, { status: 500 });
     }
 }
