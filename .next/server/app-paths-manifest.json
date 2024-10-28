@@ -1,4 +1,11 @@
 {
+  "/api/base-cost/route": "app/api/base-cost/route.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/shipping-cost/route": "app/api/shipping-cost/route.js",
+  "/api/cities/route": "app/api/cities/route.js",
+  "/api/shipping-rates/route": "app/api/shipping-rates/route.js",
+  "/about/page": "app/about/page.js",
   "/page": "app/page.js",
+  "/workers-calculator/page": "app/workers-calculator/page.js",
   "/calculator/page": "app/calculator/page.js"
 }
