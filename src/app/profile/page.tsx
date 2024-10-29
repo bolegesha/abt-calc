@@ -20,7 +20,7 @@ export default function BasicProfilePage() {
     const [activeSection, setActiveSection] = useState('profile')
 
     const sidebarItems = [
-        { icon: House, label: 'Главная страница', href: 'http://localhost:3000/' },
+        { icon: House, label: 'Главная страница', href: 'https://abt-calc.vercel.app/' },
         { icon: UserCircle, label: 'Личный кабинет', href: '#profile' },
         { icon: Settings, label: 'Настройки', href: '#settings' },
         { icon: Bell, label: 'Заказы', href: '#orders' },

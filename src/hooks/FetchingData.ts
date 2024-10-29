@@ -11,18 +11,27 @@ interface ShippingRates {
 
 interface ShippingData {
     cities: string[];
+    startCities: string[];
+    endCities: string[];
     rates: ShippingRates | null;
 }
 
 export function useShippingData(startCity: string, endCity: string): [ShippingData, string | null] {
     const [cities, setCities] = useState<string[]>([]);
+    const [startCities, setStartCities] = useState<string[]>([]);
+    const [endCities, setEndCities] = useState<string[]>([]);
     const [rates, setRates] = useState<ShippingRates | null>(null);
     const [error, setError] = useState<string | null>(null);
 
+    // Fetch all cities
     useEffect(() => {
         fetch('/api/cities')
             .then(response => response.json())
-            .then(data => setCities(data))
+            .then(data => {
+                setCities(data);
+                setStartCities(data);
+                setEndCities(data);
+            })
             .catch(error => {
                 console.error('Failed to fetch cities:', error);
                 setError('Failed to load cities. Please try again later.');
@@ -46,5 +55,5 @@ export function useShippingData(startCity: string, endCity: string): [ShippingDa
         }
     }, [startCity, endCity]);
 
-    return [{ cities, rates }, error];
+    return [{ cities, startCities, endCities, rates }, error];
 }
