@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState, useMemo } from "react";
 import { useShippingData } from "@/hooks/FetchingData";
 
@@ -10,6 +8,11 @@ interface ShippingRates {
     estimated_delivery_days_max: number;
     base_cost_composition: number;
     base_cost_door: number;
+}
+
+interface CalculationResponse {
+    finalCost: number;
+    deliveryEstimate: string;
 }
 
 interface TransportCalculatorProps {
@@ -24,55 +27,46 @@ export default function UnifiedTransportCalculator({ calculatorType }: Transport
     const [startCity, setStartCity] = useState("");
     const [endCity, setEndCity] = useState("");
     const [shippingType, setShippingType] = useState<"composition" | "door">("composition");
-    const [finalCost, setFinalCost] = useState<number | null>(null);
-    const [deliveryEstimate, setDeliveryEstimate] = useState<string | null>(null);
+    const [calculationResult, setCalculationResult] = useState<CalculationResponse | null>(null);
     const [calculationError, setCalculationError] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
 
-    const [{ cities, rates }, fetchError] = useShippingData(startCity, endCity);
+    const [{ cities }, fetchError] = useShippingData(startCity, endCity);
 
-    const calculateCost = () => {
+    const calculateCost = async () => {
         setCalculationError(null);
-        setFinalCost(null);
+        setCalculationResult(null);
+        setIsLoading(true);
 
-        if (!rates || !weight) {
-            setCalculationError("Please fill in all required fields and ensure shipping rates are loaded.");
-            return;
+        try {
+            const response = await fetch('/api/calculate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    weight: parseFloat(weight),
+                    length: length ? parseFloat(length) : null,
+                    width: width ? parseFloat(width) : null,
+                    height: height ? parseFloat(height) : null,
+                    startCity,
+                    endCity,
+                    shippingType,
+                }),
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.message || 'Failed to calculate shipping cost');
+            }
+
+            const result = await response.json();
+            setCalculationResult(result);
+        } catch (error) {
+            setCalculationError(error instanceof Error ? error.message : 'An error occurred');
+        } finally {
+            setIsLoading(false);
         }
-
-        let calculatedWeight = parseFloat(weight);
-        if (isNaN(calculatedWeight) || calculatedWeight <= 0) {
-            setCalculationError("Please enter a valid weight");
-            return;
-        }
-
-        const pricePerKg = shippingType === "composition"
-            ? rates.price_per_kg_composition
-            : rates.price_per_kg_door;
-        const baseCost = shippingType === "composition"
-            ? rates.base_cost_composition
-            : rates.base_cost_door;
-
-        // Calculate cost by weight
-        let costByWeight: number;
-        if (calculatedWeight <= 20) {
-            costByWeight = baseCost;
-        } else {
-            costByWeight = baseCost + (calculatedWeight - 20) * pricePerKg;
-        }
-
-        // Calculate cost by volume if dimensions are provided
-        if (length && width && height) {
-            const volumeWeight = (parseFloat(length) * parseFloat(width) * parseFloat(height)) / 5000;
-            const volumeCost = volumeWeight * pricePerKg;
-
-            // Use the higher of volume cost or weight cost
-            setFinalCost(Math.round(Math.max(volumeCost, costByWeight)));
-        } else {
-            // If dimensions are not provided, use weight-based cost
-            setFinalCost(Math.round(costByWeight));
-        }
-
-        setDeliveryEstimate(`от ${rates.estimated_delivery_days_min} до ${rates.estimated_delivery_days_max} дней`);
     };
 
     const orderedCities = useMemo(() => {
@@ -94,8 +88,7 @@ export default function UnifiedTransportCalculator({ calculatorType }: Transport
         setStartCity("");
         setEndCity("");
         setShippingType("composition");
-        setFinalCost(null);
-        setDeliveryEstimate(null);
+        setCalculationResult(null);
         setCalculationError(null);
     };
 
@@ -195,25 +188,27 @@ export default function UnifiedTransportCalculator({ calculatorType }: Transport
                     <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6 pt-4">
                         <button
                             onClick={calculateCost}
-                            className="flex-1 bg-[#00358E] text-white py-3 px-6 rounded-full hover:bg-[#0077ED] transition-colors focus:outline-none focus:ring-2 focus:ring-[#0071E3] focus:ring-opacity-50"
+                            disabled={isLoading}
+                            className="flex-1 bg-[#00358E] text-white py-3 px-6 rounded-full hover:bg-[#0077ED] transition-colors focus:outline-none focus:ring-2 focus:ring-[#0071E3] focus:ring-opacity-50 disabled:opacity-50"
                         >
-                            Посчитать
+                            {isLoading ? 'Вычисление...' : 'Посчитать'}
                         </button>
                         <button
                             onClick={clear}
-                            className="flex-1 bg-[#F5F5F7] text-[#00358E] py-3 px-6 rounded-full hover:bg-[#E8E8ED] transition-colors focus:outline-none focus:ring-2 focus:ring-[#0071E3] focus:ring-opacity-50"
+                            disabled={isLoading}
+                            className="flex-1 bg-[#F5F5F7] text-[#00358E] py-3 px-6 rounded-full hover:bg-[#E8E8ED] transition-colors focus:outline-none focus:ring-2 focus:ring-[#0071E3] focus:ring-opacity-50 disabled:opacity-50"
                         >
                             Очистить
                         </button>
                     </div>
                 </div>
-                {finalCost !== null && deliveryEstimate && (
+                {calculationResult && (
                     <div className="mt-12 p-8 bg-[#F5F5F7] rounded-2xl">
                         <p className="text-2xl sm:text-3xl font-semibold text-[#1D1D1F] mb-3">
-                            Стоимость доставки: <span className="text-[#00358E]">{finalCost} тенге</span>
+                            Стоимость доставки: <span className="text-[#00358E]">{calculationResult.finalCost} тенге</span>
                         </p>
                         <p className="text-sm text-[#00358E]">
-                            Ожидаемое время доставки: <span className="font-medium">{deliveryEstimate}</span>
+                            Ожидаемое время доставки: <span className="font-medium">{calculationResult.deliveryEstimate}</span>
                         </p>
                     </div>
                 )}

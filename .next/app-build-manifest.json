@@ -1,76 +1,35 @@
 {
   "pages": {
-    "/_not-found/page": [
-      "static/chunks/webpack-c03d0cf6226175da.js",
-      "static/chunks/4bd1b696-731940b743baa309.js",
-      "static/chunks/215-ddd6cd1db6c2931e.js",
-      "static/chunks/main-app-424e8e03fadb20e4.js",
-      "static/chunks/app/_not-found/page-02514134b2c70d65.js"
-    ],
-    "/api/base-cost/route": [
-      "static/chunks/webpack-c03d0cf6226175da.js",
-      "static/chunks/4bd1b696-731940b743baa309.js",
-      "static/chunks/215-ddd6cd1db6c2931e.js",
-      "static/chunks/main-app-424e8e03fadb20e4.js",
-      "static/chunks/app/api/base-cost/route-d8ac041467eede8a.js"
-    ],
     "/layout": [
-      "static/chunks/webpack-c03d0cf6226175da.js",
-      "static/chunks/4bd1b696-731940b743baa309.js",
-      "static/chunks/215-ddd6cd1db6c2931e.js",
-      "static/chunks/main-app-424e8e03fadb20e4.js",
-      "static/css/1886d758e4e235fd.css",
-      "static/chunks/780-749461c284c75e66.js",
-      "static/chunks/app/layout-18b98a3aeda2be52.js"
-    ],
-    "/api/shipping-cost/route": [
-      "static/chunks/webpack-c03d0cf6226175da.js",
-      "static/chunks/4bd1b696-731940b743baa309.js",
-      "static/chunks/215-ddd6cd1db6c2931e.js",
-      "static/chunks/main-app-424e8e03fadb20e4.js",
-      "static/chunks/app/api/shipping-cost/route-229fda36403bdf06.js"
-    ],
-    "/api/cities/route": [
-      "static/chunks/webpack-c03d0cf6226175da.js",
-      "static/chunks/4bd1b696-731940b743baa309.js",
-      "static/chunks/215-ddd6cd1db6c2931e.js",
-      "static/chunks/main-app-424e8e03fadb20e4.js",
-      "static/chunks/app/api/cities/route-d23ac811ee9cf778.js"
-    ],
-    "/api/shipping-rates/route": [
-      "static/chunks/webpack-c03d0cf6226175da.js",
-      "static/chunks/4bd1b696-731940b743baa309.js",
-      "static/chunks/215-ddd6cd1db6c2931e.js",
-      "static/chunks/main-app-424e8e03fadb20e4.js",
-      "static/chunks/app/api/shipping-rates/route-50d580d320d6336f.js"
-    ],
-    "/about/page": [
-      "static/chunks/webpack-c03d0cf6226175da.js",
-      "static/chunks/4bd1b696-731940b743baa309.js",
-      "static/chunks/215-ddd6cd1db6c2931e.js",
-      "static/chunks/main-app-424e8e03fadb20e4.js",
-      "static/chunks/app/about/page-deef2b049961fc8f.js"
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/layout.css",
+      "static/chunks/app/layout.js"
     ],
     "/page": [
-      "static/chunks/webpack-c03d0cf6226175da.js",
-      "static/chunks/4bd1b696-731940b743baa309.js",
-      "static/chunks/215-ddd6cd1db6c2931e.js",
-      "static/chunks/main-app-424e8e03fadb20e4.js",
-      "static/chunks/app/page-abf527430eed89fb.js"
-    ],
-    "/workers-calculator/page": [
-      "static/chunks/webpack-c03d0cf6226175da.js",
-      "static/chunks/4bd1b696-731940b743baa309.js",
-      "static/chunks/215-ddd6cd1db6c2931e.js",
-      "static/chunks/main-app-424e8e03fadb20e4.js",
-      "static/chunks/app/workers-calculator/page-ae75795061214f2b.js"
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/page.js"
     ],
     "/calculator/page": [
-      "static/chunks/webpack-c03d0cf6226175da.js",
-      "static/chunks/4bd1b696-731940b743baa309.js",
-      "static/chunks/215-ddd6cd1db6c2931e.js",
-      "static/chunks/main-app-424e8e03fadb20e4.js",
-      "static/chunks/app/calculator/page-959fed67907f912b.js"
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/calculator/page.js"
+    ],
+    "/api/cities/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/cities/route.js"
+    ],
+    "/api/shipping-rates/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/shipping-rates/route.js"
+    ],
+    "/api/calculate/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/calculate/route.js"
     ]
   }
 }
